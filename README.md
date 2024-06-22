@@ -6,33 +6,14 @@
 
 ## 项目成员
 
-- 组长: 汤龙鑫
-- 组员: 刘健民、蔡锦浩
+- 宋凯帆、蔡锦浩
 
 ## 快速开始
 
 ### 环境变量
 
 参考[wc.env.template](wc.env.template)，配置好Mysql相关的环境变量。
-
-### SQL建表
-
-1. 进入到mysql命令行
-
-    ```bash
-    mysql -uxxx -p
-    ```
-
-2. 创建数据库
-
-    在crawler数据库中创建[passage表](./src/middleware/mysql/sqls/passage.sql)和[image表](./src/middleware/mysql/sqls/image.sql)
-
-    ```sql
-    CREATE DATABASE crawler;
-    USE crawler;
-    SOURCE ./src/middleware/mysql/sqls/passage.sql;
-    SOURCE ./src/middleware/mysql/sqls/image.sql;
-    ```
+连接数据库后可输入id导入该文档后输入模型
 
 ### 运行项目
 
@@ -51,9 +32,9 @@ playwright install
 ```
 
 ##### 运行代码
-
+可供选择的有neo2.py中使用数据库中输入的
 ```bash
-python main.py --init_page_id "'6844903801518981133'"(掘金的文章ID，注意这里的引号) --max_page 100
+python main.py
 ```
 
 参数说明:

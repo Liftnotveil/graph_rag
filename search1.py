@@ -47,8 +47,7 @@ neo4j_driver = GraphDatabase.driver(
 )
 
 llm = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
-    
-# logger.add("/Users/skf/ModelTest/work/file_2.log")  
+     
 @contextmanager
 def scoped_session():
         db_session = Session()
@@ -142,7 +141,12 @@ class Retriever(BaseRetriever):
             prompt_grade = ChatPromptTemplate.from_template(template_grade)
             chain_grade = prompt_grade| llm | StrOutputParser()
             n=self.text_retriever(question)
-            result=chain_grade.invoke({"expected_result": expected_result, "coll_result": n})
+            t=self.structured_retriever(question)
+            combined_item = {
+                    "node's relationship": t,
+                    "coll_text": n,
+                }
+            result=chain_grade.invoke({"expected_result": expected_result, "coll_result": combined_item})
             return result
         
         def test(self):
@@ -160,17 +164,15 @@ class Retriever(BaseRetriever):
                 expected_result = item["expected_result"]
                 logger.info("expected_result{}",expected_result)
                 # retrieved_result=self.structured_retriever(question)
-                t,_=self.prompt_grade(expected_result,question)
-                _,k=self.prompt_grade(expected_result,question)
+                result=self.prompt_grade(expected_result,question)
                 combined_item = {
                     "question": question,
                     "expected_result": expected_result,
-                    "coll":k,
-                    "score": t
+                    "score": result
                 }
                 all_results.append(combined_item)
-            with open("/Users/skf/ModelTest/work/score.json", 'w', encoding='utf-8') as json_file:
+            with open("/xxx/score.json", 'w', encoding='utf-8') as json_file:
                 json.dump(all_results, json_file, ensure_ascii=False, indent=2)   
                
 instance = Retriever
-
+instance.test()

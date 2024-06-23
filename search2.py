@@ -201,7 +201,7 @@ class Retriever(BaseRetriever):
                     "retrieved_result ":retrieved_result,
                 }
                 all_results.append(combined_item)
-            with open("/Users/skf/ModelTest/work/all_results.json", 'w', encoding='utf-8') as json_file:
+            with open("/xxx/all_results.json", 'w', encoding='utf-8') as json_file:
                 json.dump(all_results, json_file, ensure_ascii=False, indent=2)
                    
         def schema_count(graph:str):
@@ -216,8 +216,4 @@ class Retriever(BaseRetriever):
                 
         
 instance = Retriever()
-chain = GraphCypherQAChain.from_llm(
-    ChatOpenAI(temperature=0), graph=graph, verbose=True, return_intermediate_steps=True
-)
-graph_schema=chain.graph_schema
-
+instance.test()

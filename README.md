@@ -33,7 +33,10 @@ playwright install
 
 ##### 运行代码
 可供选择的有neo2.py中使用数据库中输入的文章代码
+
 //content_ids = input("Input the IDs of the content (separate IDs by space): ").strip().split()
+参数解释（content_ids）为数据库中文章代表id
+
 ```bash
 python neo2.py
 ```
@@ -47,26 +50,41 @@ python search1.py
 python search2.py
 ```
 
-#### Docker运行(推荐)
+#### 2种检索的不同选择
 
-##### 拉取基础镜像
-
-前往[Coding制品库](https://sztubdi.coding.net/p/ai-assistant/artifacts/23947142/docker/packages?hash=9ec50f4b491e46d59ba305cf9d2939fa)按照指引配置docker密钥
-
+##### search1
+利用问题抽取通过以下对所有实体节点进行检索得出相似度最高的两个节点后抽出后进行图结构检索
 ```bash
-docker pull sztubdi-docker.pkg.coding.net/ai-assistant/web-crawler/web-crawler-base:v20240320
+CALL db.index.fulltext.queryNodes('entity', $query, {limit:2}
+```
+运行获得测试集评分和结果
+```bash
+instance = Retriever
+instance.test()
 ```
 
-##### 构建镜像
+
+##### search2
+利用问题抽取通过以下对所有实体节点进行检索得出相似度最高的两个节点后抽出后通过document中心节点进行拓扑结构抽取该节点代表的中心节点所组成小型整图
+```bash
+CALL db.index.fulltext.queryNodes('entity', $query, {limit:2}
+```
+可运行test直接得到测试集生成的cypher语句
 
 ```bash
-docker build -f docker/Dockerfile -t web-crawler:latest .
+instance = Retriever()
+instance.test()
 ```
 
-##### 运行容器
-
+为适配qachain可使用schema_count获得相关token数量
 ```bash
-docker run --env-file wc.env --network host web-crawler:latest  python main.py --_type "'keyword'" --max_keywords 1 --max_links_per_keyword 20 --indicated_keyword "'cpu性能'"
+instance = Retriever()
+chain = GraphCypherQAChain.from_llm(
+    ChatOpenAI(temperature=0), graph=graph, verbose=True, return_intermediate_steps=True
+)
+graph_schema=chain.graph_schema
+instance.schema_count(graph_schema)
 ```
 
-参数同上
+
+

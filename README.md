@@ -1,8 +1,8 @@
-# Web-Crawler:2024腾讯校内实习项目
+# graph_rag:2024腾讯校内实习项目
 
 ## 项目简介
-
-通过爬虫快速爬取互联网上的性能优化相关文章，为中心快速沉淀性能优化数据，为后续训练私有LLM提供数据支持。
+利用web-clawer爬取数据进行图形生成
+通过使用实验性LLMGraphTransformer生成知识图谱，并设有两种混合检索方式。
 
 ## 项目成员
 
@@ -11,8 +11,8 @@
 ## 快速开始
 
 ### 环境变量
-
-参考[wc.env.template](wc.env.template)，配置好Mysql相关的环境变量。
+参考[env_template.env]
+配置好Mysql，openai，neo4j相关的环境变量。
 连接数据库后可输入id导入该文档后输入模型
 
 ### 运行项目
@@ -32,15 +32,20 @@ playwright install
 ```
 
 ##### 运行代码
-可供选择的有neo2.py中使用数据库中输入的
+可供选择的有neo2.py中使用数据库中输入的文章代码
+//content_ids = input("Input the IDs of the content (separate IDs by space): ").strip().split()
 ```bash
-python main.py
+python neo2.py
 ```
-
-参数说明:
-
-- `init_page_id`: 可选，指定文章id开始爬取，在数据库为空的情况下进行指定，数据库不为空则不需要指定
-- `max_page`: 可选，最大爬取文章数，默认不进行限制
+构建知识图谱后的检索：
+1，
+```bash
+python search1.py
+```
+2，
+```bash
+python search2.py
+```
 
 #### Docker运行(推荐)
 
